@@ -1,22 +1,17 @@
-'use client';
+'use client'
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { useAuth } from '@/context/AuthContext';
+import { useAuth } from '@/context/AuthContext'
 
 export default function Home() {
-    const { manager } = useAuth();
-    const router = useRouter();
+    const { manager } = useAuth()
 
-    useEffect(() => {
-        // if (!manager) {
-        //     router.push('/(auth)/login');
-        // } else {
-            router.push('/dashboard');
-        // }
-    }, [manager, router]);
+    if (!manager) return <p>Loading manager...</p>
 
-    if (!manager) return <p>Loading manager...</p>;
-
-    return null;
+    return (
+        <main className="p-8">
+            <h1 className="text-xl font-semibold">Welcome, {manager.fullName}</h1>
+            <p>Company: {manager.companyName}</p>
+            <p>Description: {manager.companyDescription}</p>
+        </main>
+    )
 }
