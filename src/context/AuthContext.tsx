@@ -1,7 +1,7 @@
 'use client'
 
 import React, {createContext, useContext, useEffect, useState} from 'react'
-import {ManagerDto} from '@/app/types/api'
+import {ManagerDto} from '@/types/api'
 import {getManagerById} from '@/services/managerService'
 
 type AuthContextType = {
@@ -22,24 +22,15 @@ export const AuthProvider = ({children}: { children: React.ReactNode }) => {
         void (async () => {
             const storedId = localStorage.getItem('managerId') || TEMP_MANAGER_ID
             try {
-                const m = await getManagerById(storedId)
+                const m = await getManagerById(storedId!) //temporary
                 setManagerState(m)
                 localStorage.setItem('managerId', m.id)
             } catch (err) {
-                console.warn('Failed to load manager, bypassing with TEMP_MANAGER_ID:', err)
-                console.info('Bypassing authentication with TEMP_MANAGER_ID')
-                setManagerState({ 
-                    id: TEMP_MANAGER_ID, 
-                    name: 'Temporary Manager', 
-                    fullName: 'Temporary Manager Full Name', 
-                    companyName: 'Temporary Company', 
-                    companyDescription: 'Temporary Description', 
-                    createdAt: new Date().toISOString() 
-                } as ManagerDto)
-                localStorage.setItem('managerId', TEMP_MANAGER_ID)
+                console.error('Failed to load manager:', err)
             }
         })()
     }, [])
+
 
     const setManager = (m: ManagerDto) => {
         setManagerState(m)
@@ -60,9 +51,6 @@ export const AuthProvider = ({children}: { children: React.ReactNode }) => {
 
 export const useAuth = () => {
     const ctx = useContext(AuthContext)
-    if (!ctx) {
-        console.error('useAuth must be used inside <AuthProvider>');
-        return { manager: null, setManager: () => {}, clearManager: () => {} };
-    }
+    if (!ctx) throw new Error('useAuth must be used inside <AuthProvider>')
     return ctx
 }

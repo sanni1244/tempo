@@ -57,7 +57,7 @@ export default function DashboardPage() {
                     onClick={() => router.push('/jobs/new')}
                     className="flex items-center gap-1 bg-black text-white text-sm px-4 py-2 rounded-md hover:bg-gray-900 transition"
                 >
-                    New Job <span className="text-lg leading-none">+</span>
+                    <span className="text-lg pb-1 leading-none">+</span> New Job
                 </button>
             </div>
 
